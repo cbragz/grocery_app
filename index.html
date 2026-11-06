@@ -1,0 +1,993 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Personal Task Tracker</title>
+
+<style>
+
+/* ==========================================
+   1. GLOBAL STYLES
+========================================== */
+
+:root {
+    --bg: #f5f6fa;
+    --card: #ffffff;
+    --text: #252a34;
+    --muted: #89909e;
+    --border: #e9ebf0;
+    --accent: #5367d9;
+    --accent-light: #eef0ff;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 40px 24px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont,
+                 "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+.container {
+    max-width: 1250px;
+    margin: 0 auto;
+}
+
+
+/* ==========================================
+   2. PAGE HEADER
+========================================== */
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+header h1 {
+    font-size: 27px;
+    font-weight: 700;
+    margin: 0 0 6px;
+    letter-spacing: -0.7px;
+}
+
+header p {
+    color: var(--muted);
+    margin: 0;
+    font-size: 14px;
+}
+
+.header-label {
+    background: var(--accent-light);
+    color: var(--accent);
+    padding: 9px 15px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+
+/* ==========================================
+   3. MAIN DASHBOARD
+========================================== */
+
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 26px;
+    align-items: start;
+}
+
+.person-column {
+    min-width: 0;
+}
+
+.person-heading {
+    font-size: 19px;
+    font-weight: 700;
+    margin: 0 0 17px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.person-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--accent-light);
+    color: var(--accent);
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+
+/* ==========================================
+   4. SECTION CARDS
+========================================== */
+
+.section-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    padding: 21px;
+    margin-bottom: 18px;
+    box-shadow: 0 3px 12px rgba(25, 35, 60, 0.035);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 17px;
+}
+
+.section-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.task-count {
+    font-size: 11px;
+    color: var(--muted);
+    background: #f2f3f6;
+    padding: 5px 9px;
+    border-radius: 12px;
+}
+
+
+/* ==========================================
+   5. TASK LIST
+========================================== */
+
+.task-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.task-item {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 11px 7px;
+    border-bottom: 1px solid #f0f1f4;
+    min-width: 0;
+}
+
+.task-item:last-child {
+    border-bottom: none;
+}
+
+.task-checkbox {
+    width: 17px;
+    height: 17px;
+    flex-shrink: 0;
+    cursor: pointer;
+    accent-color: var(--accent);
+}
+
+.task-text {
+    flex: 1;
+    min-width: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+    transition: color 0.2s;
+}
+
+.task-item.completed .task-text {
+    text-decoration: line-through;
+    color: #a6abb5;
+}
+
+.empty-message {
+    font-size: 12px;
+    color: #a0a5b0;
+    padding: 12px 7px;
+    font-style: italic;
+}
+
+
+/* ==========================================
+   6. CARD FOOTER AND RESET BUTTON
+========================================== */
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border);
+    padding-top: 13px;
+    margin-top: 15px;
+}
+
+.reset-btn {
+    border: 1px solid var(--border);
+    background: white;
+    color: #737b89;
+    padding: 7px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.reset-btn:hover {
+    background: #f5f6fa;
+    color: var(--text);
+}
+
+.footer-note {
+    font-size: 10px;
+    color: var(--muted);
+}
+
+
+/* ==========================================
+   7. MOBILE RESPONSIVENESS
+========================================== */
+
+@media (max-width: 760px) {
+
+    body {
+        padding: 25px 15px;
+    }
+
+    .dashboard {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    header h1 {
+        font-size: 23px;
+    }
+
+}
+
+@media (max-width: 400px) {
+
+    .section-card {
+        padding: 16px;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <!-- PAGE HEADER -->
+
+    <header>
+
+        <div>
+            <h1>Task Tracker</h1>
+            <p>Keep track of your weekly and monthly responsibilities.</p>
+        </div>
+
+        <div class="header-label">
+            PERSONAL DASHBOARD
+        </div>
+
+    </header>
+
+
+    <!-- DASHBOARD -->
+
+    <main class="dashboard" id="dashboard">
+        <!-- Cards generated dynamically using JavaScript -->
+    </main>
+
+</div>
+
+
+<script>
+
+/* ==================================================
+   1. PERMANENT TASK DEFINITIONS
+
+   EDIT YOUR TASKS DIRECTLY HERE.
+
+   Add or remove task names inside the relevant arrays.
+
+   Keep the three section names unchanged.
+================================================== */
+
+const taskData = {
+
+    "Person SS": {
+
+        "Weekly": [
+            "weekly_item_1",
+            "weekly_item_2",
+            "weekly_item_3"
+        ],
+
+        "Even Month": [
+            "even_month_item_1",
+            "even_month_item_2"
+        ],
+
+        "Odd Month": [
+            "Mini sweet pepers",
+            "Basmati Rice",
+            "BBerries",
+            "Fruits", 
+            "Garbage bags",
+            "banana",
+            "Avocado bag",
+            "Oranges",
+            "Apples (Honey crisp)",
+            "Mushrooms",
+            "Red lentils",
+            "Pad liners",
+            "Moong",
+            "Baking Sod",
+            "Papad",
+            "Poha",
+            "Pumpkin",
+            "Cucumber",
+            "Fish & Prawns",
+            "Kosher salt",
+            "Tomatoes - also for sauce",
+            "Ginger",
+            "Garlic",
+            "Jalapenos",
+            "eggs - 30 x 2",
+            "Onion",
+            "Potatoes",
+            "Greens",
+            "Beets - 5",
+            "Carrots",
+            "Okra",
+            "Bitter Guard",
+            "Cilantro",
+            "Peppers - for sauce",
+            "Black Pepper",
+            "Bath tissue",
+            "Dijaun Mustard",
+            "Garlic",
+            "Avacado Oil",
+            "Figs",
+            "Bananas",
+            "Sweet potato"
+        ]
+
+    },
+
+
+    "Person CB": {
+
+        "Weekly": [
+            "weekly_item_1",
+            "weekly_item_2",
+            "weekly_item_3"
+        ],
+
+        "Even Month": [
+            "even_month_item_1",
+            "even_month_item_2"
+        ],
+
+        "Odd Month": [
+            "Bread - 3p Whole wheat",
+            "Flour - 5 lb bag",
+            "Almond / Oat milk",
+            "Greek Yogurt - 2nos",
+            "Burger Buns",
+            "Toothpaste",
+            "Body wash",
+            "Shampoo",
+            "Bounty - 3",
+            "Almonds",
+            "Raisins",
+            "Cranberries dry",
+            "White Vinegar",
+            "Apple Cider \"Braggs\"",
+            "Coke",
+            "Orange Pekoe tea",
+            "Honey - 1",
+            "Dark Chocolate",
+            "Cashews - 2",
+            "Green Tea Lipton",
+            "Milk - 2%",
+            "Pumpkin seeds",
+            "Sunflower",
+            "Chia",
+            "Hemp",
+            "Olive oil",
+            "Walnuts big packet",
+            "Brazil nuts",
+            "Peanuts",
+            "Cheese Slices",
+            "Burbon",
+            "Hide n Seek",
+            "Goodday- 2",
+            "Chips",
+            "Oats (Rolled Oats)",
+            "White Quinoa",
+            "Handsoap refil 1 litre",
+            "Salt (table salt)",
+            "Suji (semolina)"
+        ]
+
+    }
+
+};
+
+
+/* ==================================================
+   2. SESSION STORAGE CONFIGURATION
+
+   Checkbox status is stored separately from
+   the permanent task definitions.
+
+   Status survives page refreshes within the tab.
+================================================== */
+
+const STORAGE_KEY = "personalTaskTracker_status_v1";
+
+let completedTasks = {};
+
+
+/* ==================================================
+   3. CREATE DEFAULT CHECKBOX STATES
+
+   Every task starts unchecked.
+================================================== */
+
+function createDefaultStatus() {
+
+    const status = {};
+
+    Object.keys(taskData).forEach(person => {
+
+        status[person] = {};
+
+        Object.keys(taskData[person]).forEach(section => {
+
+            status[person][section] =
+                taskData[person][section].map(() => false);
+
+        });
+
+    });
+
+    return status;
+
+}
+
+
+/* ==================================================
+   4. VALIDATE SESSION DATA
+
+   Prevent corrupted or outdated checkbox data
+   from breaking the application.
+================================================== */
+
+function validateStatus(data) {
+
+    if (
+        !data ||
+        typeof data !== "object" ||
+        Array.isArray(data)
+    ) {
+        return false;
+    }
+
+    for (const person of Object.keys(taskData)) {
+
+        if (
+            !data[person] ||
+            typeof data[person] !== "object"
+        ) {
+            return false;
+        }
+
+        for (const section of Object.keys(taskData[person])) {
+
+            const saved = data[person][section];
+
+            const permanent = taskData[person][section];
+
+            if (
+                !Array.isArray(saved) ||
+                saved.length !== permanent.length
+            ) {
+                return false;
+            }
+
+            if (
+                !saved.every(value => typeof value === "boolean")
+            ) {
+                return false;
+            }
+
+        }
+
+    }
+
+    return true;
+
+}
+
+
+/* ==================================================
+   5. LOAD SESSION DATA
+
+   If data is missing, empty or corrupted,
+   all checkboxes start unchecked.
+================================================== */
+
+function loadStatus() {
+
+    try {
+
+        const savedData = sessionStorage.getItem(STORAGE_KEY);
+
+        if (!savedData || savedData.trim() === "") {
+
+            completedTasks = createDefaultStatus();
+
+            saveStatus();
+
+            return;
+
+        }
+
+        const parsedData = JSON.parse(savedData);
+
+        if (validateStatus(parsedData)) {
+
+            completedTasks = parsedData;
+
+        } else {
+
+            completedTasks = createDefaultStatus();
+
+            saveStatus();
+
+        }
+
+    } catch (error) {
+
+        console.warn(
+            "Session data unavailable. Loading default states.",
+            error
+        );
+
+        completedTasks = createDefaultStatus();
+
+        try {
+
+            saveStatus();
+
+        } catch (storageError) {
+
+            console.warn(
+                "Unable to save session data.",
+                storageError
+            );
+
+        }
+
+    }
+
+}
+
+
+/* ==================================================
+   6. SAVE SESSION DATA
+================================================== */
+
+function saveStatus() {
+
+    try {
+
+        sessionStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify(completedTasks)
+        );
+
+    } catch (error) {
+
+        console.warn(
+            "Unable to save checkbox states.",
+            error
+        );
+
+    }
+
+}
+
+
+/* ==================================================
+   7. INITIALIZE APPLICATION ON PAGE LOAD
+================================================== */
+
+window.onload = function () {
+
+    try {
+
+        loadStatus();
+
+        renderDashboard();
+
+    } catch (error) {
+
+        console.error(
+            "Dashboard initialization error:",
+            error
+        );
+
+        completedTasks = createDefaultStatus();
+
+        try {
+
+            renderDashboard();
+
+        } catch (renderError) {
+
+            console.error(
+                "Dashboard rendering failed:",
+                renderError
+            );
+
+        }
+
+    }
+
+};
+
+
+/* ==================================================
+   8. RENDER MAIN DASHBOARD
+
+   Automatically creates:
+   - Person A column
+   - Person B column
+   - Three cards under each person
+================================================== */
+
+function renderDashboard() {
+
+    const dashboard = document.getElementById("dashboard");
+
+    if (!dashboard) return;
+
+    dashboard.innerHTML = "";
+
+    const people = Object.keys(taskData);
+
+    people.forEach((person, personIndex) => {
+
+        const column = document.createElement("div");
+
+        column.className = "person-column";
+
+
+        // Person heading
+
+        const heading = document.createElement("h2");
+
+        heading.className = "person-heading";
+
+
+        const avatar = document.createElement("span");
+
+        avatar.className = "person-avatar";
+
+        avatar.textContent =
+            personIndex === 0 ? "A" : "B";
+
+
+        heading.appendChild(avatar);
+
+        heading.appendChild(
+            document.createTextNode(person)
+        );
+
+
+        column.appendChild(heading);
+
+
+        // Generate section cards
+
+        Object.keys(taskData[person]).forEach(section => {
+
+            column.appendChild(
+                createSectionCard(person, section)
+            );
+
+        });
+
+
+        dashboard.appendChild(column);
+
+    });
+
+}
+
+
+/* ==================================================
+   9. CREATE INDIVIDUAL SECTION CARD
+================================================== */
+
+function createSectionCard(person, section) {
+
+    const card = document.createElement("section");
+
+    card.className = "section-card";
+
+
+    // Section header
+
+    const header = document.createElement("div");
+
+    header.className = "section-header";
+
+
+    const title = document.createElement("h3");
+
+    title.className = "section-title";
+
+    title.textContent = section;
+
+
+    const count = document.createElement("span");
+
+    count.className = "task-count";
+
+
+    const tasks = taskData[person][section];
+
+    const completedCount =
+        completedTasks[person][section].filter(Boolean).length;
+
+
+    count.textContent =
+        completedCount + " / " + tasks.length + " completed";
+
+
+    header.appendChild(title);
+
+    header.appendChild(count);
+
+
+    // Task list
+
+    const list = document.createElement("ul");
+
+    list.className = "task-list";
+
+
+    if (tasks.length === 0) {
+
+        const empty = document.createElement("li");
+
+        empty.className = "empty-message";
+
+        empty.textContent = "No tasks in this section.";
+
+        list.appendChild(empty);
+
+    } else {
+
+        tasks.forEach((task, index) => {
+
+            list.appendChild(
+                createTaskItem(
+                    person,
+                    section,
+                    task,
+                    index,
+                    count
+                )
+            );
+
+        });
+
+    }
+
+
+    // Card footer
+
+    const footer = document.createElement("div");
+
+    footer.className = "card-footer";
+
+
+    const resetButton = document.createElement("button");
+
+    resetButton.type = "button";
+
+    resetButton.className = "reset-btn";
+
+    resetButton.textContent = "↺ Reset";
+
+
+    resetButton.addEventListener("click", function () {
+
+        resetSection(person, section);
+
+    });
+
+
+    const footerNote = document.createElement("span");
+
+    footerNote.className = "footer-note";
+
+    footerNote.textContent = "Reset completed tasks";
+
+
+    footer.appendChild(resetButton);
+
+    footer.appendChild(footerNote);
+
+
+    // Assemble card
+
+    card.appendChild(header);
+
+    card.appendChild(list);
+
+    card.appendChild(footer);
+
+
+    return card;
+
+}
+
+
+/* ==================================================
+   10. CREATE INDIVIDUAL TASK
+================================================== */
+
+function createTaskItem(
+    person,
+    section,
+    task,
+    index,
+    countElement
+) {
+
+    const item = document.createElement("li");
+
+    item.className = "task-item";
+
+
+    // Checkbox
+
+    const checkbox = document.createElement("input");
+
+    checkbox.type = "checkbox";
+
+    checkbox.className = "task-checkbox";
+
+    checkbox.checked =
+        completedTasks[person][section][index];
+
+
+    checkbox.setAttribute(
+        "aria-label",
+        "Complete " + task
+    );
+
+
+    // Task title
+
+    const taskText = document.createElement("span");
+
+    taskText.className = "task-text";
+
+    taskText.textContent = task;
+
+
+    // Apply completed styling on initial render
+
+    if (checkbox.checked) {
+
+        item.classList.add("completed");
+
+    }
+
+
+    // Checkbox interaction
+
+    checkbox.addEventListener("change", function () {
+
+        completedTasks[person][section][index] =
+            checkbox.checked;
+
+
+        item.classList.toggle(
+            "completed",
+            checkbox.checked
+        );
+
+
+        updateCount(
+            person,
+            section,
+            countElement
+        );
+
+
+        saveStatus();
+
+    });
+
+
+    item.appendChild(checkbox);
+
+    item.appendChild(taskText);
+
+
+    return item;
+
+}
+
+
+/* ==================================================
+   11. UPDATE COMPLETION COUNTER
+================================================== */
+
+function updateCount(person, section, countElement) {
+
+    const tasks = taskData[person][section];
+
+    const completed =
+        completedTasks[person][section].filter(Boolean).length;
+
+
+    countElement.textContent =
+        completed + " / " + tasks.length + " completed";
+
+}
+
+
+/* ==================================================
+   12. RESET INDIVIDUAL SECTION
+
+   Only resets the selected section.
+   Does not affect other people or sections.
+================================================== */
+
+function resetSection(person, section) {
+
+    completedTasks[person][section] =
+        taskData[person][section].map(() => false);
+
+
+    saveStatus();
+
+    renderDashboard();
+
+}
+
+</script>
+
+</body>
+</html>
